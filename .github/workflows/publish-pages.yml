@@ -30,6 +30,7 @@ jobs:
           cp index.html manual.html revision-diseno.html public-site/
           cp -R assets public-site/assets
           cp -R review public-site/review
+          cp -R brand public-site/brand
           touch public-site/.nojekyll
       - uses: actions/upload-pages-artifact@v4
         with:
@@ -37,4 +38,5 @@ jobs:
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
+
 
