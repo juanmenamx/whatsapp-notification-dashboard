@@ -1,0 +1,38 @@
+name: Publish web application
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: publish-current-web
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/configure-pages@v5
+      - name: Prepare compiled public files
+        run: |
+          mkdir public-site
+          cp index.html manual.html public-site/
+          cp -R assets public-site/assets
+          touch public-site/.nojekyll
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: public-site
+      - name: Deploy website
+        id: deployment
+        uses: actions/deploy-pages@v4
